@@ -360,3 +360,9 @@ Only save if the user asks or the question is significant enough to reference la
 **The Recommendation:** Take the startup role — but only if two conditions are true: (1) you have at least 6 months of personal financial runway if the company folds, and (2) you genuinely believe in the product. If either condition fails, take the big tech role without guilt. The "founding engineer at a startup" story is only worth the risk if you can survive the downside and care enough to fight for the upside.
 
 **The One Thing to Do First:** Have an explicit fundraising conversation with the startup founder this week. Ask them to walk you through their current investor conversations and expected close date. Their answer — and how they answer it — tells you more than any council session will.
+
+---
+
+## License
+
+This skill is released under the [MIT License](LICENSE).
