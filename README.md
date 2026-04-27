@@ -1,20 +1,16 @@
-# LLM Council
+# Better LLM Council
 
-> Run any decision through a council of AI advisors. They think independently. They review each other. A chairman synthesizes the final verdict.
-
----
-
-You ask one AI a question, you get one answer. That answer might be great. It might be wrong. You have no way to tell because you only saw one perspective.
-
-The council fixes this.
-
-It runs your question through 5 independent advisors, each thinking from a fundamentally different angle — then has them review each other anonymously, then synthesizes everything into a final verdict that tells you where advisors agree, where they clash, and what you should actually do.
-
-This is a Claude skill adapted from **Andrej Karpathy's LLM Council** methodology. Karpathy dispatches queries to multiple models, has them peer-review each other anonymously, then a chairman produces the final answer. This skill does the same inside Claude using sub-agents with distinct thinking lenses.
+> Stop asking Claude one question and getting one answer. Run it through a council.
 
 ---
 
-## what it produces
+Karpathy had an idea: send a question to multiple AI models, have them review each other's answers anonymously, then a chairman produces the final verdict. The peer review round is what makes it work — models catch each other's blind spots in a way single-model reasoning never does.
+
+This is that idea, rebuilt as a Claude skill. Instead of multiple models, it uses sub-agents with distinct thinking lenses. Same methodology, runs entirely inside Claude, no API juggling required.
+
+---
+
+## what you actually get
 
 ```
 ## Council Verdict: Should I take the startup offer?
@@ -43,17 +39,19 @@ Their answer — and how they answer it — tells you more than this council wil
 
 ---
 
-## how to use it
+## install
 
-### install
+Copy `SKILL.md` into your Claude skills directory:
 
-1. Copy `SKILL.md` into your Claude skills directory:
-   ```
-   .claude/skills/llm-council/SKILL.md
-   ```
-2. That's it. Claude picks it up automatically.
+```
+.claude/skills/better-llm-council/SKILL.md
+```
 
-### trigger it
+That's it. Claude picks it up automatically.
+
+---
+
+## how to trigger it
 
 ```
 council this: [your question]
@@ -63,76 +61,59 @@ Other triggers:
 - `war room this: [question]`
 - `pressure-test this: [idea]`
 - `debate this: [decision]`
-- `pre-mortem this: [plan]` — assumes the decision failed and works backward
+- `pre-mortem this: [plan]` — assumes the decision failed, works backward
 - `quick council this: [question]` — 3 advisors, faster, for lower-stakes calls
 
 ---
 
-## the three modes
+## three modes
 
-### quick council
-3 advisors. No peer review round. Chairman synthesizes directly.
+**Quick Council** — 3 advisors, no peer review, chairman synthesizes directly. For tactical decisions where you're 80% sure and want a sanity check.
 
-Best for: tactical decisions, time-sensitive calls, questions where you're 80% sure and want a sanity check.
+**Full Council** — 5 advisors, full peer review round, convergence score. For anything where being wrong is expensive.
 
-### full council (default)
-5 advisors. Full peer review round where advisors review each other's work anonymously. Chairman synthesizes with a convergence score.
-
-Best for: major pivots, irreversible decisions, anything where being wrong is expensive.
-
-### pre-mortem
-The council assumes the decision was made and it *failed*. They work backward to find the failure modes before they happen.
-
-Best for: validating a decision you've already mostly made, stress-testing a plan before you execute.
+**Pre-mortem** — the council assumes the decision was made and it failed, then works backward. Best thing you can do before a high-stakes commitment.
 
 ---
 
 ## the eight advisors
 
-The council draws from a roster of 8. The full council uses 5; selection is automatic based on question domain.
+The full council uses 5; selection is automatic based on question domain.
 
-| Advisor | What they look for |
+| Advisor | Job |
 |---|---|
-| **The Contrarian** | What's wrong, what's missing, what will fail |
-| **The First Principles Thinker** | What you're actually trying to solve, stripped of assumptions |
-| **The Expansionist** | Upside everyone else is missing |
-| **The Outsider** | What fresh eyes see that experts miss |
-| **The Executor** | Whether it can actually be done and what the first step is |
-| **The Technical Architect** | What breaks at scale, what the maintenance burden looks like |
+| **The Contrarian** | Find the fatal flaw |
+| **The First Principles Thinker** | Strip assumptions, rebuild from scratch |
+| **The Expansionist** | Find the upside everyone's ignoring |
+| **The Outsider** | React with zero context — what a fresh user sees |
+| **The Executor** | Is this actually doable, and what's step one |
+| **The Technical Architect** | What breaks at scale, what the maintenance cost looks like |
 | **The Customer** | What the end user actually experiences |
-| **The Systems Thinker** | Feedback loops, second-order effects, unintended consequences |
+| **The Systems Thinker** | Second-order effects, feedback loops, unintended consequences |
 
-You can request specific advisors: `council this with Technical Architect, Contrarian, and Expansionist`
+Request specific advisors: `council this with Technical Architect, Contrarian, and Expansionist`
 
 ---
 
-## what makes this different from just asking Claude
+## why not just ask Claude five times
 
-**Single-model answer:** Claude gives you one synthesized take. It's balanced, it's hedged, it's trying not to offend anyone.
+Asking the same question five times gives you five polite, balanced, slightly different versions of the same answer.
 
-**The council:** Five advisors who are explicitly told to *not* be balanced. The Contrarian looks for failure. The Expansionist looks for upside. The Outsider ignores your context. The peer review forces them to evaluate each other's blind spots. The chairman synthesizes the result of that tension — not the average of five opinions, but what emerges from five perspectives actively challenging each other.
+Two things make the council different:
 
-The peer review round is the key insight from Karpathy's methodology. It's what makes this more than "ask five times." When advisors see each other's work anonymously, they catch things they wouldn't have caught reasoning alone.
+**Forced perspective.** Each advisor is told not to be balanced — to lean fully into their angle. The Contrarian isn't trying to be fair. The Expansionist isn't worrying about risk. The tension between them is the point.
+
+**Anonymous peer review.** After advisors respond, they review each other's work without knowing who said what. That's the Karpathy insight — models catch blind spots in each other's reasoning that they'd miss working alone. The chairman synthesizes the result of that tension, not the average of five opinions.
 
 ---
 
 ## when to use it
 
-The council is for decisions where being wrong is expensive.
+Good council questions: major pivots, job offers, pricing decisions, architecture calls, hiring, positioning choices — anything where being wrong costs real time or money.
 
-**Good council questions:**
-- "Should I launch a $97 workshop or a $497 course?"
-- "Which of these three positioning angles is strongest?"
-- "I'm thinking of pivoting from X to Y. Am I crazy?"
-- "Should I hire a VA or build an automation first?"
-- "Is this architecture going to hold at 10x scale?"
+Bad council questions: things with one right answer, creation tasks, "summarize this."
 
-**Bad council questions:**
-- "What's the capital of France?" — one right answer, no need for perspectives
-- "Write me a tweet" — creation task, not a decision
-- "Summarize this article" — processing task, not judgment
-
-The council shines when there's genuine uncertainty and the cost of a bad call is high. If you already know the answer and want validation, the council will probably tell you things you don't want to hear. That's the point.
+If you already know the answer and want validation, the council will probably tell you things you don't want to hear. That's the point.
 
 ---
 
@@ -140,27 +121,25 @@ The council shines when there's genuine uncertainty and the cost of a bad call i
 
 The chairman rates how much advisors agreed:
 
-- **High convergence** (4–5 pointing the same direction): strong signal, high confidence in the recommendation
-- **Medium convergence** (3–2 split): genuine uncertainty, both paths defensible
-- **Low convergence** (advisors all over the place): the question needs more clarity before deciding
+- **High** (4–5 pointing the same way): confident recommendation
+- **Medium** (3–2 split): genuine uncertainty, both paths defensible
+- **Low** (all over the place): the question needs more clarity before you decide
 
-Convergence doesn't mean the majority is right. The chairman can side with a single strong dissenter and explain why.
+High convergence doesn't mean the majority is right. The chairman can side with a single strong dissenter if the reasoning holds.
 
 ---
 
 ## credits
 
 - Core methodology: [Andrej Karpathy's LLM Council](https://x.com/karpathy)
-- Claude skills framework: [Anthropic](https://anthropic.com)
+- Built as a Claude skill by [Abdul Malik Anvar Mackey](https://github.com/malik-builds)
 
 ---
 
 ## contributing
 
-Found an advisor archetype that's missing? Have a domain where the auto-selection doesn't pick the right five? Open an issue or PR.
+Missing an advisor archetype? Domain where auto-selection picks the wrong five? Open an issue or PR.
 
 ---
 
-## license
-
-MIT. Use it, fork it, improve it.
+MIT license. Use it, fork it, improve it.
