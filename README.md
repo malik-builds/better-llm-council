@@ -1,6 +1,6 @@
 # Better LLM Council
 
-> Stop asking Claude one question and getting one answer. Run it through a council.
+Stop asking Claude one question and getting one answer. Run it through a council. Get more insights.
 
 ---
 
